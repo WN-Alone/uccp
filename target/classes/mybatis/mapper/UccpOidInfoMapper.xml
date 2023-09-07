@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nantian.uccp.mapper.UccpOidInfoMapper">
+
+    <select id="queryUccpOidInfoListPage" resultType="UccpOidInfo">
+        select OID,OID_NAME,PUB_FLAG,OID_DEVICE_TYPE,ENTERPRISE,OID_DEVICE_CODE,OID_DEVICE_VERSION,DESCRIPTION from
+        uccp_oid_info where 1 = 1
+        <if test="oid != null and oid != ''">
+           and OID like CONCAT('%',CONCAT(#{oid},'%'))
+        </if>
+        limit #{pageNum}, #{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select count(OID) from uccp_oid_info where 1 = 1
+        <if test="oid != null and oid != ''">
+            and OID like CONCAT('%',CONCAT(#{oid},'%'))
+        </if>
+    </select>
+    <select id="list" resultType="com.nantian.uccp.pojo.UccpOidInfo">
+        select * from uccp_oid_info
+    </select>
+
+    <insert id="addOID" parameterType="UccpOidInfo">
+        insert into uccp_oid_info
+        (OID,OID_NAME,PUB_FLAG,OID_DEVICE_TYPE,ENTERPRISE,OID_DEVICE_CODE,OID_DEVICE_VERSION,DESCRIPTION)
+        values
+        (#{oid},#{oidName},#{pubFlag},#{oidDeviceType},#{enterprise},#{oidDeviceCode},#{oidDeviceVersion},#{description})
+    </insert>
+
+    <update id="updateOID" parameterType="UccpOidInfo">
+        update uccp_oid_info
+        <set>
+                OID_NAME=#{oidName},
+                PUB_FLAG=#{pubFlag},
+                OID_DEVICE_TYPE=#{oidDeviceType},
+                ENTERPRISE=#{enterprise},
+                OID_DEVICE_CODE=#{oidDeviceCode},
+                OID_DEVICE_VERSION=#{oidDeviceVersion},
+                DESCRIPTION=#{description}
+        </set>
+        where OID=#{oid}
+    </update>
+
+    <delete id="deleteOID" parameterType="String">
+        delete from uccp_oid_info where OID = #{oid}
+    </delete>
+    <delete id="deleteOIDs">
+        delete from uccp_oid_info where OID in (
+        <foreach collection="list" item="oid" separator=",">
+            #{oid}
+        </foreach>
+        )
+    </delete>
+
+</mapper>

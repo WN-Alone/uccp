@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nantian.uccp.mapper.UccpEngJobJnlMapper">
+
+    <select id="queryUccpOidInfoListPage" resultType="UccpEngJobJnl">
+        select * from uccp_eng_job_jnl
+        where 1 = 1
+        <if test="startTime != null">
+            and START_TIME = #{startTime}
+        </if>
+        <if test="plat != null and plat != ''">
+        and plat like CONCAT('%',CONCAT(#{plat},'%'))
+        </if>
+        <if test="jobState != null and jobState != ''">
+        and JOB_STATE like CONCAT('%',CONCAT(#{jobState},'%'))
+        </if>
+        <if test="jobRlt != null and jobRlt != ''">
+        and JOB_RLT like CONCAT('%',CONCAT(#{jobRlt},'%'))
+        </if>
+        limit #{pageNum}, #{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select count(plat) from uccp_eng_job_jnl
+        where 1 = 1
+        <if test="startTime != null">
+            and START_TIME = #{startTime}
+        </if>
+        <if test="plat != null and plat != ''">
+            and plat like CONCAT('%',CONCAT(#{plat},'%'))
+        </if>
+        <if test="jobState != null and jobState != ''">
+            and JOB_STATE like CONCAT('%',CONCAT(#{jobState},'%'))
+        </if>
+        <if test="jobRlt != null and jobRlt != ''">
+            and JOB_RLT like CONCAT('%',CONCAT(#{jobRlt},'%'))
+        </if>
+    </select>
+
+
+</mapper>
